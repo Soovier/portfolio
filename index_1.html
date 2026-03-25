@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stephen Osunkunle — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --surface: #111114;
+      --surface2: #18181d;
+      --border: #2a2a32;
+      --accent: #e8c97a;
+      --accent2: #c8a855;
+      --text: #e8e8ec;
+      --muted: #7a7a8a;
+      --dim: #3a3a48;
+      --green: #4ade80;
+      --blue: #60a5fa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* ======== NAV ======== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(10,10,11,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ======== HERO ======== */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-line {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--accent) 40%, transparent);
+      opacity: 0.2;
+    }
+
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.2;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+    }
+
+    .hero-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      line-height: 1.0;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.4s;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      margin-top: 2rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.6s;
+    }
+
+    .hero-actions {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.8s;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--accent);
+      color: #0a0a0b;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 40px; height: 1px;
+      background: var(--dim);
+    }
+
+    .hero-stats {
+      position: absolute;
+      right: 3rem;
+      bottom: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1s;
+    }
+
+    .stat-item {
+      text-align: right;
+      border-right: 2px solid var(--accent);
+      padding-right: 1rem;
+    }
+
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* ======== SECTIONS ======== */
+    section {
+      padding: 7rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--accent);
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 3.5rem;
+    }
+
+    /* ======== ABOUT ======== */
+    #about {
+      border-top: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-text {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--muted);
+    }
+
+    .about-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .skills-block {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .skill-group-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .skill-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: var(--surface);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ======== EXPERIENCE ======== */
+    #experience {
+      border-top: 1px solid var(--border);
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 3rem;
+      padding: 2.5rem 0 2.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 3rem;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .tl-meta {
+      padding-top: 0.2rem;
+    }
+
+    .tl-period {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .tl-company {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .tl-location {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      margin-top: 0.3rem;
+      letter-spacing: 0.1em;
+    }
+
+    .tl-role {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .tl-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .tl-bullets li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .tl-bullets li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+
+    /* ======== PROJECTS ======== */
+    #projects {
+      border-top: 1px solid var(--border);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+    }
+
+    .project-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-card:hover { background: var(--surface2); }
+
+    .project-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.2em;
+    }
+
+    .project-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.75;
+      flex: 1;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tech-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      padding: 0.25rem 0.6rem;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      letter-spacing: 0.08em;
+    }
+
+    .project-links {
+      display: flex;
+      gap: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .project-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .project-link:hover { color: var(--accent); }
+
+    .project-link svg {
+      width: 12px; height: 12px;
+    }
+
+    /* ======== EDUCATION ======== */
+    #education {
+      border-top: 1px solid var(--border);
+    }
+
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .edu-card::after {
+      content: 'FSU';
+      position: absolute;
+      right: -1rem;
+      bottom: -2rem;
+      font-family: 'DM Serif Display', serif;
+      font-size: 8rem;
+      color: var(--border);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .edu-degree {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .edu-school {
+      font-size: 1rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .edu-location {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    .edu-activities {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .edu-activity {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .edu-activity::before {
+      content: '◆';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.45rem;
+      top: 0.35rem;
+    }
+
+    /* ======== CONTACT ======== */
+    #contact {
+      border-top: 1px solid var(--border);
+      padding-bottom: 6rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-headline {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .contact-headline em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .contact-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 1.5rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      group: true;
+      transition: padding-left 0.2s;
+    }
+
+    .contact-item:hover { padding-left: 0.5rem; }
+
+    .contact-item-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .contact-item-value {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .contact-arrow {
+      color: var(--dim);
+      font-size: 1.2rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .contact-item:hover .contact-arrow {
+      color: var(--accent);
+      transform: translate(4px, -4px);
+    }
+
+    /* ======== FOOTER ======== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* ======== ANIMATIONS ======== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ======== MOBILE ======== */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      #hero { padding: 6rem 1.5rem 4rem; }
+      .hero-stats { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid,
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .edu-card { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-logo">S. Osunkunle</span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-grid-lines"></div>
+    <div class="hero-bg-line"></div>
+
+    <p class="hero-tag">Computer Scientist &amp; Software Engineer</p>
+
+    <h1 class="hero-name">
+      Stephen<br/>
+      <em>Osunkunle</em>
+    </h1>
+
+    <p class="hero-subtitle">
+      Dual B.S. in Computer Science &amp; Mathematics at Frostburg State University.<br/>
+      Full-stack developer · Research engineer · Community builder.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        View Projects
+      </a>
+      <a href="mailto:saosunkunle0@frostburg.edu" class="btn-outline">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Get In Touch
+      </a>
+    </div>
+
+    <div class="hero-scroll">
+      <span class="scroll-line"></span>
+      Scroll to explore
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">10K+</div>
+        <div class="stat-label">Community Members</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">30%</div>
+        <div class="stat-label">Ticket Closure Gain</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2×</div>
+        <div class="stat-label">B.S. Degrees</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label reveal">About</p>
+    <div class="about-grid">
+      <div>
+        <h2 class="section-title reveal">Builder by nature,<br/><em style="font-style:italic; color:var(--accent)">engineer</em> by training.</h2>
+        <p class="about-text reveal">
+          I'm <strong>Stephen Osunkunle</strong>, a software engineer and CS/Math student at Frostburg State University. I care about writing clean, impactful code — from bioinformatics pipelines in <strong>Java &amp; Rust</strong> to full-stack web apps and thriving developer communities.
+        </p>
+        <br/>
+        <p class="about-text reveal">
+          I've led frontend teams at <strong>Beachify Inc.</strong>, contributed to open-access science at the <strong>UMD Appalachian Laboratory</strong>, and built a Luau scripting community from the ground up to <strong>10,000+ members</strong>.
+        </p>
+      </div>
+      <div class="skills-block reveal">
+        <div>
+          <p class="skill-group-label">Languages</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Java</span>
+            <span class="skill-tag">Rust</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">Luau / Lua</span>
+            <span class="skill-tag">R</span>
+            <span class="skill-tag">MySQL</span>
+            <span class="skill-tag">Laravel</span>
+          </div>
+        </div>
+        <div>
+          <p class="skill-group-label">Tools &amp; Systems</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Linux</span>
+            <span class="skill-tag">Unix</span>
+            <span class="skill-tag">Git / Git Bash</span>
+            <span class="skill-tag">Windows</span>
+            <span class="skill-tag">HTML / CSS</span>
+          </div>
+        </div>
+        <div>
+          <p class="skill-group-label">Competencies</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Full-Stack Dev</span>
+            <span class="skill-tag">Bioinformatics</span>
+            <span class="skill-tag">Code Review</span>
+            <span class="skill-tag">Team Leadership</span>
+            <span class="skill-tag">Agile / Scrum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <p class="section-label reveal">Experience</p>
+    <h2 class="section-title reveal">Where I've<br/>done the work.</h2>
+
+    <div class="timeline">
+
+      <div class="timeline-item reveal">
+        <div class="tl-meta">
+          <p class="tl-period">Jan 2024 – Present</p>
+          <p class="tl-company">Beachify Inc.</p>
+          <p class="tl-location">Remote</p>
+        </div>
+        <div>
+          <p class="tl-role">Head Frontend Intern</p>
+          <ul class="tl-bullets">
+            <li>Led a team of frontend developer interns, mentoring them on HTML/CSS/JavaScript best practices and conducting rigorous code reviews.</li>
+            <li>Resolved complex technical issues, contributing to a <strong style="color:var(--text)">30% increase</strong> in ticket closure rate and improved site performance.</li>
+            <li>Coordinated sprint standups and task tracking, ensuring on-time delivery of features across multiple sprints.</li>
+            <li>Improved team productivity by <strong style="color:var(--text)">20%</strong> through organized task management and clearer coding standards.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="tl-meta">
+          <p class="tl-period">May 2023 – Aug 2023</p>
+          <p class="tl-company">UMD Appalachian Laboratory</p>
+          <p class="tl-location">Frostburg, MD</p>
+        </div>
+        <div>
+          <p class="tl-role">Research Software Intern</p>
+          <ul class="tl-bullets">
+            <li>Programmed in <strong style="color:var(--text)">Java and Rust</strong> to analyze taxonomy and FASTA files for the Aquatic eDNA project.</li>
+            <li>Compared aligned sequences to identify new genetic data and previously unidentified species sequences.</li>
+            <li>Contributed to <strong style="color:var(--text)">eDNAtlas</strong>, an open-access database providing spatial occurrence data for aquatic species.</li>
+            <li>Utilized Unix to manage taxonomy ranks and reference genome sequences at scale.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="tl-meta">
+          <p class="tl-period">Ongoing</p>
+          <p class="tl-company">SxS Scripting</p>
+          <p class="tl-location">Online Community</p>
+        </div>
+        <div>
+          <p class="tl-role">Founder &amp; Lead Educator</p>
+          <ul class="tl-bullets">
+            <li>Founded and grew a developer community focused on Luau scripting and Roblox game development to <strong style="color:var(--text)">10,000+ members</strong>.</li>
+            <li>Taught Luau programming fundamentals, helping new developers complete their first shipped projects.</li>
+            <li>Managed YouTube content strategy reaching <strong style="color:var(--text)">4,500+ viewers</strong>, attracting experienced developers to the community.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <p class="section-label reveal">Projects</p>
+    <h2 class="section-title reveal">Technical<br/>Artifacts.</h2>
+
+    <div class="projects-grid reveal">
+
+      <!-- Project 1 -->
+      <div class="project-card">
+        <p class="project-num">01 / Coding Project</p>
+        <h3 class="project-name">SxS Scripting Frontend</h3>
+        <p class="project-desc">
+          A full community website and portal for SxS Scripting — a 10,000-member developer community focused on Luau and Roblox game development. Built to showcase tutorials, resources, and community announcements.
+        </p>
+        <div class="project-tech">
+          <span class="tech-badge">HTML</span>
+          <span class="tech-badge">CSS</span>
+          <span class="tech-badge">JavaScript</span>
+          <span class="tech-badge">Luau</span>
+        </div>
+        <div class="project-links">
+          <a href="https://github.com/Soovier/SxS-Frontend" target="_blank" class="project-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card">
+        <p class="project-num">02 / Research Project</p>
+        <h3 class="project-name">UMCES eDNA Analysis Tool</h3>
+        <p class="project-desc">
+          Final product from a paid research internship at the UMD Appalachian Laboratory. Built with Java and Rust to parse taxonomy and FASTA files, enabling identification of novel aquatic species sequences for the eDNAtlas open-access database.
+        </p>
+        <div class="project-tech">
+          <span class="tech-badge">Java</span>
+          <span class="tech-badge">Rust</span>
+          <span class="tech-badge">Unix</span>
+          <span class="tech-badge">Bioinformatics</span>
+        </div>
+        <div class="project-links">
+          <a href="https://github.com/Soovier/UMCES-Final-Product" target="_blank" class="project-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card">
+        <p class="project-num">03 / Live Application</p>
+        <h3 class="project-name">SXM Trading &amp; Journal Platform</h3>
+        <p class="project-desc">
+          A full-stack day trading and trade journaling web application deployed live at sxm-leaderboard.org. Allows traders to log, track, and review their trades over time, with a competitive leaderboard to benchmark performance against other traders. Designed to reinforce disciplined trading habits through structured journaling and real-time rankings.
+        </p>
+        <div class="project-tech">
+          <span class="tech-badge">JavaScript</span>
+          <span class="tech-badge">HTML / CSS</span>
+          <span class="tech-badge">Day Trading</span>
+          <span class="tech-badge">Trade Journal</span>
+          <span class="tech-badge">Live Deployment</span>
+        </div>
+        <div class="project-links">
+          <a href="https://sxm-leaderboard.org/leaderboard" target="_blank" class="project-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Live Site ↗
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <p class="section-label reveal">Education</p>
+    <h2 class="section-title reveal">Academic<br/>Foundation.</h2>
+
+    <div class="edu-card reveal">
+      <div>
+        <p class="edu-school">Frostburg State University</p>
+        <h3 class="edu-degree">B.S. Computer Science<br/>B.S. Mathematics</h3>
+        <p class="edu-location">Frostburg, MD · Expected 2025/2026</p>
+        <div class="edu-activities">
+          <p class="edu-activity">Appalachian Laboratory Paid Research Internship (2023)</p>
+          <p class="edu-activity">Residential Assistant — 2023–2024</p>
+          <p class="edu-activity">CCIT Showcase &amp; CSIT Game Jam participant</p>
+          <p class="edu-activity">Member, National Council for Negro Women</p>
+          <p class="edu-activity">Member, Iota Phi Theta Fraternity, Inc.</p>
+        </div>
+      </div>
+      <div>
+        <div style="background:var(--surface2); border:1px solid var(--border); padding:1.5rem; min-width:180px;">
+          <p style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:var(--dim); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.75rem;">Dual Degree</p>
+          <p style="font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--text);">Computer<br/>Science</p>
+          <div style="height:1px; background:var(--border); margin:0.75rem 0;"></div>
+          <p style="font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--text);">Mathematics</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-grid">
+      <div class="reveal">
+        <p class="section-label">Contact</p>
+        <h2 class="contact-headline">Let's build<br/>something <em>great</em>.</h2>
+        <p class="contact-sub">
+          Whether it's a new project, a collaboration,<br/>
+          or just a conversation — my inbox is open.
+        </p>
+      </div>
+      <div class="contact-links reveal">
+        <a href="mailto:saosunkunle0@frostburg.edu" class="contact-item">
+          <div>
+            <p class="contact-item-label">Email</p>
+            <p class="contact-item-value">saosunkunle0@frostburg.edu</p>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+        <a href="tel:6672009227" class="contact-item">
+          <div>
+            <p class="contact-item-label">Phone</p>
+            <p class="contact-item-value">667-200-9227</p>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+        <a href="https://linkedin.com/in/stephenosunkunle" target="_blank" class="contact-item">
+          <div>
+            <p class="contact-item-label">LinkedIn</p>
+            <p class="contact-item-value">linkedin.com/in/stephenosunkunle</p>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+        <a href="https://github.com/Soovier" target="_blank" class="contact-item">
+          <div>
+            <p class="contact-item-label">GitHub</p>
+            <p class="contact-item-value">github.com/Soovier</p>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+        <a href="https://sxm-leaderboard.org/leaderboard" target="_blank" class="contact-item">
+          <div>
+            <p class="contact-item-label">Trading Platform</p>
+            <p class="contact-item-value">sxm-leaderboard.org</p>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-text">© 2026 Stephen Osunkunle · Baltimore, MD</p>
+    <p class="footer-text">B.S. Computer Science &amp; Mathematics · Frostburg State University</p>
+  </footer>
+
+  <!-- SCROLL REVEAL SCRIPT -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          el.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
