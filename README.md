@@ -27,7 +27,7 @@ If you'd rather use GitHub Pages:
 1. Push `index.html` to a repo
 2. Go to Settings → Pages
 3. Set the source to your main branch
-4. It'll be live at `https://yourusername.github.io/repo-name`
+4. It'll be live at `https://Soovier.github.io/portfolio`
 
 ---
 
